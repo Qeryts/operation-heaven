@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ArrowRight } from "lucide-react";
@@ -11,10 +11,32 @@ const HERO_IMG =
 
 const Hero = () => {
   const [mission, setMission] = useState(null);
+  
+  // PRZENIESIONE HOOKI AUDIO NA SAMĄ GÓRĘ KOMPONENTU (Zgodnie z zasadami Reacta)
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.5);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     axios.get(`${API}/mission`).then((r) => setMission(r.data)).catch(() => {});
   }, []);
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(err => console.log("Audio play blocked:", err));
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleVolumeChange = (e) => {
+    const tempVolume = parseFloat(e.target.value);
+    setVolume(tempVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = tempVolume;
+    }
+  };
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 pt-10 md:pt-14 pb-16 relative" data-testid="hero-page">
@@ -56,7 +78,7 @@ const Hero = () => {
               }}
             />
           </div>
-         {/* Center callsign ring */}
+          {/* Center callsign ring */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 mono text-[10px] text-mil-sub tracking-[0.3em]">
             RAPTOR · ACTUAL
           </div>
@@ -74,107 +96,80 @@ const Hero = () => {
           />
       
           {/* TACTICAL AUDIO PLAYER */}
-          <div style={{ position: 'relative', zIndex: 10 }}>
-            {(() => {
-              const [isPlaying, setIsPlaying] = React.useState(false);
-              const [volume, setVolume] = React.useState(0.5);
-              const audioRef = React.useRef(null);
-
-              const togglePlay = () => {
-                if (isPlaying) {
-                  audioRef.current.pause();
-                } else {
-                  audioRef.current.play().catch(err => console.log("Audio play blocked:", err));
-                }
-                setIsPlaying(!isPlaying);
-              };
-
-              const handleVolumeChange = (e) => {
-                const tempVolume = parseFloat(e.target.value);
-                setVolume(tempVolume);
-                if (audioRef.current) {
-                  audioRef.current.volume = tempVolume;
-                }
-              };
-
-              return (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '15px',
-                  margin: '0 auto',
-                  padding: '6px 12px',
-                  background: 'rgba(10, 10, 10, 0.85)',
-                  border: '1px solid rgba(127, 182, 105, 0.4)',
-                  borderRadius: '2px',
-                  maxWidth: '280px',
-                  fontFamily: 'monospace',
-                  position: 'absolute',
-                  bottom: '40px', 
-                  transform: 'translateX(-50%)',
-                  left: '50%',
-                  zIndex: 20
-                }}>
-                  <audio 
-                    ref={audioRef} 
-                    src="/ambient.mp3" 
-                    loop 
-                  />
-                  <button 
-                    onClick={togglePlay}
-                    type="button"
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#7fb069',
-                      cursor: 'pointer',
-                      fontSize: '11px',
-                      fontWeight: 'bold',
-                      letterSpacing: '1px',
-                      padding: '2px 6px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      textTransform: 'uppercase',
-                      transition: 'all 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => e.target.style.textShadow = '0 0 5px #7fb069'}
-                    onMouseLeave={(e) => e.target.style.textShadow = 'none'}
-                  >
-                    {isPlaying ? (
-                      <>
-                        <span style={{ color: '#ff3333' }}>■</span> STOP FEED
-                      </>
-                    ) : (
-                      <>
-                        <span>▶</span> TACTICAL AUDIO
-                      </>
-                    )}
-                  </button>
-                  <span style={{ color: 'rgba(127, 182, 105, 0.3)', fontSize: '10px' }}>|</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '9px', color: '#7fb069', opacity: 0.7 }}>VOL</span>
-                    <input 
-                      type="range" 
-                      min="0" 
-                      max="1" 
-                      step="0.05" 
-                      value={volume} 
-                      onChange={handleVolumeChange}
-                      style={{
-                        width: '60px',
-                        height: '2px',
-                        backgroundColor: 'rgba(127, 182, 105, 0.2)',
-                        outline: 'none',
-                        cursor: 'pointer',
-                        accentColor: '#7fb069',
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })()}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '15px',
+            margin: '0 auto',
+            padding: '6px 12px',
+            background: 'rgba(10, 10, 10, 0.85)',
+            border: '1px solid rgba(127, 182, 105, 0.4)',
+            borderRadius: '2px',
+            maxWidth: '280px',
+            fontFamily: 'monospace',
+            position: 'absolute',
+            bottom: '40px', 
+            transform: 'translateX(-50%)',
+            left: '50%',
+            zIndex: 20
+          }}>
+            <audio 
+              ref={audioRef} 
+              src="/ambient.mp3" 
+              loop 
+            />
+            <button 
+              onClick={togglePlay}
+              type="button"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#7fb069',
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                letterSpacing: '1px',
+                padding: '2px 6px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                textTransform: 'uppercase',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => e.target.style.textShadow = '0 0 5px #7fb069'}
+              onMouseLeave={(e) => e.target.style.textShadow = 'none'}
+            >
+              {isPlaying ? (
+                <>
+                  <span style={{ color: '#ff3333' }}>■</span> STOP FEED
+                </>
+              ) : (
+                <>
+                  <span>▶</span> TACTICAL AUDIO
+                </>
+              )}
+            </button>
+            <span style={{ color: 'rgba(127, 182, 105, 0.3)', fontSize: '10px' }}>|</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '9px', color: '#7fb069', opacity: 0.7 }}>VOL</span>
+              <input 
+                type="range" 
+                min="0" 
+                max="1" 
+                step="0.05" 
+                value={volume} 
+                onChange={handleVolumeChange}
+                style={{
+                  width: '60px',
+                  height: '2px',
+                  backgroundColor: 'rgba(127, 182, 105, 0.2)',
+                  outline: 'none',
+                  cursor: 'pointer',
+                  accentColor: '#7fb069',
+                }}
+              />
+            </div>
           </div>
 
           {/* Bottom callsign strip */}
@@ -183,6 +178,7 @@ const Hero = () => {
             LP/OP FOX · OVERWATCH
           </div>
         </div>
+
         {/* Right column */}
         <div className="space-y-5 lg:pl-2 lg:text-right" data-testid="hero-right-col">
           <div className="section-eyebrow">Nowy wymiar taktyki ▬</div>
