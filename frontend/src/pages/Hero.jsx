@@ -37,14 +37,15 @@ const Hero = () => {
         <div
           className="absolute inset-0 bg-cover bg-center ambient-shift"
           style={{
-            backgroundImage: `linear-gradient(rgba(10,10,10,0.55), rgba(10,10,10,0.85)), url(${HERO_BG})`,
-            filter: "hue-rotate(60deg) saturate(0.7) contrast(1.1)",
+            backgroundImage: `linear-gradient(rgba(6,20,10,0.55), rgba(6,20,10,0.85)), url(${HERO_BG})`,
+            filter: "hue-rotate(80deg) saturate(0.5) contrast(1.15) brightness(0.85)",
           }}
         />
-        <div className="absolute inset-0 tactical-grid opacity-40 animate-grid-scroll" />
+        <div className="absolute inset-0 tactical-grid opacity-30" />
         <div className="grain-overlay" />
         {/* NVG green tint */}
-        <div className="absolute inset-0 bg-mil-green/10 mix-blend-overlay pointer-events-none" />
+        <div className="absolute inset-0 bg-mil-green/25 mix-blend-overlay pointer-events-none" />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 90%)" }} />
 
         {/* Top strip */}
         <div className="relative flex items-center justify-between px-4 py-2 border-b border-mil-border/70 bg-black/40">
@@ -53,9 +54,8 @@ const Hero = () => {
             <span className="text-mil-warning">FRAME 04412</span>
             <span>LAT 34.5321° · LON 68.9014°</span>
           </div>
-          <div className="flex items-center gap-2 mono text-[10px] text-mil-danger">
-            <StatusLED state="danger" />
-            REC ● LIVE
+          <div className="flex items-center gap-2 mono text-[10px] text-mil-sub">
+            NVG · IR · GAIN 4
           </div>
         </div>
 
@@ -110,23 +110,23 @@ const Hero = () => {
 
             <div className="flex flex-wrap gap-3 pt-4">
               <Link
-                to="/dashboard"
-                data-testid="hero-open-dashboard"
-                className="mil-heading text-[12px] tracking-widest border border-mil-green text-mil-green px-4 py-2 hover:bg-mil-green hover:text-black transition-colors flex items-center gap-2"
-              >
-                OPEN DASHBOARD <ArrowRight size={14} />
-              </Link>
-              <Link
                 to="/opord"
                 data-testid="hero-open-opord"
-                className="mil-heading text-[12px] tracking-widest border border-mil-border text-mil-text px-4 py-2 hover:border-mil-green hover:text-mil-green transition-colors flex items-center gap-2"
+                className="mil-heading text-[12px] tracking-widest border border-mil-green text-mil-green px-4 py-2 hover:bg-mil-green hover:text-black transition-colors flex items-center gap-2"
               >
                 READ OPORD <ArrowRight size={14} />
+              </Link>
+              <Link
+                to="/satellite"
+                data-testid="hero-open-satellite"
+                className="mil-heading text-[12px] tracking-widest border border-mil-border text-mil-text px-4 py-2 hover:border-mil-green hover:text-mil-green transition-colors flex items-center gap-2"
+              >
+                SATELLITE <ArrowRight size={14} />
               </Link>
             </div>
 
             <div className="mono text-[10px] text-mil-sub pt-2">
-              LOC · {mission?.location || "Northern Afghanistan | Mahboot Province"} <span className="term-cursor" />
+              LOC · {mission?.location || "Northern Afghanistan | Mahboot Province"}
             </div>
           </div>
 
@@ -153,33 +153,19 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Bottom telemetry ticker */}
+        {/* Bottom info strip (static) */}
         <div className="relative border-t border-mil-border/70 bg-black/50 px-4 py-1.5 flex items-center gap-6 mono text-[10px] text-mil-sub overflow-hidden">
-          <span className="text-mil-green">▶ TELEMETRY</span>
-          <span>BFT LINK · UP</span>
+          <span className="text-mil-green">TELEMETRY</span>
+          <span>BFT · UP</span>
           <span>JTAC · RAPTOR ACTUAL</span>
           <span>CAS · HAWK 1-1 / 1-2 · A-10C</span>
           <span>INFIL · YANKEE 1-1 · CH-53E</span>
           <span>CASEVAC · PEDRO 1-1</span>
-          <span className="text-mil-warning">MANPADS THREAT · CRITICAL</span>
         </div>
       </section>
 
       {/* Below hero: quick nav tiles */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TacticalPanel title="COMMAND DASHBOARD" tag="S//NF" state="success" testId="tile-dashboard">
-          <p className="text-[12px] text-mil-sub">
-            Live operational widgets — mission clock, phase, JTAC, extraction, logistics and airspace status.
-          </p>
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-1.5 mono text-[11px] text-mil-green mt-3"
-            data-testid="tile-dashboard-link"
-          >
-            OPEN <ArrowRight size={12} />
-          </Link>
-        </TacticalPanel>
-
         <TacticalPanel title="OPERATION ORDER" tag="S//NF" state="warning" testId="tile-opord">
           <p className="text-[12px] text-mil-sub">
             Full 5-paragraph OPORD — Sytuacja, Wróg, Siły Własne, Zadanie, Wykonanie, Cele, Logistyka, Dowodzenie.
@@ -193,12 +179,30 @@ const Hero = () => {
           </Link>
         </TacticalPanel>
 
-        <TacticalPanel title="INTELLIGENCE · HVT" tag="S//NF" state="danger" testId="tile-hvt">
-          <div className="mono text-[10px] text-mil-sub">HVT · PRIORITY ONE</div>
-          <div className="mil-heading text-mil-text text-base mt-0.5">MAHADA ALL MALIQ</div>
-          <div className="mono text-[10px] text-mil-sub mt-1">Est. Strength · 100–250 · Threat HIGH</div>
-          <div className="mono text-[10px] text-mil-warning mt-1">AIR THREAT · CRITICAL</div>
-          <div className="mono text-[10px] text-mil-sub mt-3 opacity-70">Phase 2 · Full dossier</div>
+        <TacticalPanel title="SATELLITE IMAGERY" tag="S//NF" state="info" testId="tile-satellite">
+          <p className="text-[12px] text-mil-sub">
+            Reconnaissance products — AO overview, LZs, RVs, MSR Quack, enemy AA sites, UAV feeds.
+          </p>
+          <Link
+            to="/satellite"
+            className="inline-flex items-center gap-1.5 mono text-[11px] text-mil-green mt-3"
+            data-testid="tile-satellite-link"
+          >
+            VIEW <ArrowRight size={12} />
+          </Link>
+        </TacticalPanel>
+
+        <TacticalPanel title="RULES OF ENGAGEMENT" tag="S//NF" state="warning" testId="tile-roe">
+          <p className="text-[12px] text-mil-sub">
+            PID, civilian presence, escalation of force, CAS approval and collateral damage guidance.
+          </p>
+          <Link
+            to="/roe"
+            className="inline-flex items-center gap-1.5 mono text-[11px] text-mil-green mt-3"
+            data-testid="tile-roe-link"
+          >
+            REVIEW <ArrowRight size={12} />
+          </Link>
         </TacticalPanel>
       </div>
     </div>

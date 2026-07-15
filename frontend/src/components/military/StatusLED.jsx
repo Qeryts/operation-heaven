@@ -8,10 +8,10 @@ const stateColors = {
   neutral: "#AAB9AA",
 };
 
-export const StatusLED = ({ state = "success", label, testId }) => (
+export const StatusLED = ({ state = "success", label, testId, pulse = false }) => (
   <span className="inline-flex items-center gap-2" data-testid={testId}>
     <span
-      className="led animate-led-blink"
+      className={`led ${pulse ? "led-pulse" : ""}`}
       style={{ backgroundColor: stateColors[state], color: stateColors[state] }}
     />
     {label && (

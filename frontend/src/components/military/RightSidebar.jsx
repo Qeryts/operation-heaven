@@ -32,7 +32,7 @@ export const RightSidebar = () => {
         <div className="flex items-center justify-between">
           <div>
             <div className="mono text-[10px] text-mil-sub">SYSTEM TIME</div>
-            <div className="mono text-2xl text-mil-green tracking-widest term-cursor">
+            <div className="mono text-2xl text-mil-green tracking-widest">
               {formatZulu(now)}
             </div>
             <div className="mono text-[10px] text-mil-sub mt-2">H-HOUR</div>
@@ -84,7 +84,7 @@ export const RightSidebar = () => {
           <div>WIND · {sidebar?.wind || "8 KT / 210°"}</div>
           <div>MOON · {sidebar?.moon || "74%"}</div>
         </div>
-        <div className="mt-2 tactical-grid animate-grid-scroll h-16 rounded-sm border border-mil-border/60" />
+        <div className="mt-2 tactical-grid h-16 rounded-sm border border-mil-border/60" />
       </TacticalPanel>
     </aside>
   );

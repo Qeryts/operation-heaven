@@ -113,13 +113,22 @@ body,
   box-shadow: 0 0 18px rgba(115, 199, 107, 0.14), inset 0 0 24px rgba(115, 199, 107, 0.04);
 }
 
-/* Blinking LED */
+/* Static status LED */
 .led {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 6px currentColor;
+  box-shadow: 0 0 4px currentColor;
+  opacity: 0.9;
+}
+/* Subtle pulse only where explicitly opted-in */
+.led-pulse {
+  animation: led-soft 3.2s ease-in-out infinite;
+}
+@keyframes led-soft {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
 }
 
 /* Corner brackets */
@@ -144,17 +153,12 @@ body,
   border-width: 0 1px 1px 0;
 }
 
-/* Terminal cursor */
+/* Terminal cursor (opt-in) */
 .term-cursor::after {
   content: "▍";
   color: var(--mil-green);
   margin-left: 2px;
-  animation: cursor-blink 1s step-end infinite;
-}
-
-@keyframes cursor-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  opacity: 0.6;
 }
 
 /* Radar */
@@ -233,7 +237,10 @@ body,
 
 /* Hero backdrop grain motion */
 @keyframes ambient-shift {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(-2px, -1px, 0); }
+  0% { transform: translate3d(0, 0, 0) scale(1.02); }
+  25% { transform: translate3d(-6px, -3px, 0) scale(1.025); }
+  50% { transform: translate3d(-3px, -8px, 0) scale(1.03); }
+  75% { transform: translate3d(4px, -4px, 0) scale(1.025); }
+  100% { transform: translate3d(0, 0, 0) scale(1.02); }
 }
-.ambient-shift { animation: ambient-shift 6s ease-in-out infinite; }
+.ambient-shift { animation: ambient-shift 22s ease-in-out infinite; }
