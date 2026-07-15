@@ -1,0 +1,92 @@
+{
+  "theme": "dark",
+  "typography": {
+    "primary_header": "Rajdhani, sans-serif",
+    "body": "IBM Plex Sans, sans-serif",
+    "mono": "JetBrains Mono, monospace",
+    "instructions_to_main_agent": "Use Rajdhani (bold/700 weight) for all headings, widget titles, and OPORD section headers. Use IBM Plex Sans for body text and long descriptions. Use JetBrains Mono for all coordinates, timestamps, metrics, grid numbers, and technical data. Avoid using default Inter for headers. Text sizes should be dense and strictly hierarchical."
+  },
+  "colors": {
+    "background": "#0A0A0A",
+    "panels": {
+      "default": "#111814",
+      "light": "#161B18"
+    },
+    "borders": "#2D3A31",
+    "text": {
+      "primary": "#D5E8D4",
+      "secondary": "#AAB9AA"
+    },
+    "brand": {
+      "military_green": "#73C76B",
+      "olive_drab": "#556B2F"
+    },
+    "status": {
+      "danger": "#C73E3E",
+      "warning": "#D2AF3A",
+      "info": "#5EA9FF",
+      "success": "#6FCF97"
+    },
+    "instructions_to_main_agent": "Strictly adhere to this muted military color palette. DO NOT use any gradients except very subtle, dark, linear overlays (like black to transparent). NO bright colors, NO purple, NO 'AI slop' aesthetics. Map these hex codes exactly to Tailwind variables in tailwind.config.js."
+  },
+  "visual_enhancers": {
+    "grain_overlay": "Apply a subtle SVG noise pattern (opacity 0.02 - 0.04) over panels to simulate military screen texture.",
+    "crt_scanlines": "Create a fixed, pointer-events-none overlay across the entire viewport using a repeating-linear-gradient (transparent, rgba(0,0,0,0.1) 1px, transparent 2px) at 2% opacity.",
+    "hud_glow": "For active or critical panels, add a very faint outer glow using drop-shadow or box-shadow: `box-shadow: 0 0 10px rgba(115, 199, 107, 0.1)`.",
+    "borders": "Thin 1px solid borders using `#2D3A31` on all panels and grid items to create a rigid, tabular structure.",
+    "radius": "Keep border-radius small and strict. Use exactly 6px (rounded-md) for panels, avoiding large 'blobby' radius."
+  },
+  "motion": {
+    "status_leds": "Use CSS keyframes for blinking LEDs (e.g., a 4px circle that alternates opacity between 0.3 and 1.0) to indicate active comms or live links.",
+    "radar_sweep": "Use a conic-gradient with a rotating animation (linear infinite 4s) mapped to a circular container to simulate radar/sonar activity.",
+    "terminal_cursor": "A blinking block `_` or `|` cursor at the end of specific terminal-like text readouts.",
+    "tactical_grid_scroll": "A slow, infinite linear translation on background tactical maps or grid overlays to simulate moving UAV feeds.",
+    "instructions_to_main_agent": "Animations must feel mechanical, precise, and technical. Avoid bouncy, elastic, or 'fun' easing curves. Use step functions or linear transitions where appropriate."
+  },
+  "layouts": {
+    "global_structure": "Use a full viewport height (h-screen) CSS Grid or Flex layout.",
+    "sticky_bars": "A Top Header (height: ~40px) and Bottom Footer (height: ~32px), completely fixed/sticky. Both must display classification text. Header: 'SECRET//NOFORN', Footer: 'FOR MILITARY SIMULATION PURPOSES ONLY' with danger/warning background strips (e.g., Danger Red or Warning Yellow background with black text).",
+    "left_nav": "Fixed left sidebar. Width: exactly 240px. Contains a dense vertical list of 20 navigation items.",
+    "right_sidebar": "Fixed right tactical status sidebar. Width: exactly 320px. Contains live operational status, mission clock, JTAC status, and quick readouts.",
+    "central_workspace": "Flex-1 between the two sidebars. Scrollable (overflow-y-auto). Contains the Hero Banner, Dashboard Widgets, and the 5-paragraph OPORD."
+  },
+  "components": {
+    "tactical_panel": "A container representing a C2 software window. Background: `#111814`, Border: 1px solid `#2D3A31`, Border-radius: 6px. Include a small header strip within the panel containing the panel title (Rajdhani font) and a small classification tag (e.g., [S//NF]).",
+    "nav_item": "Left menu items: Flex row, Lucide icon, small text. Hover state: background `#161B18`, left border thick green (`border-l-2 border-[#73C76B]`), very light text glow.",
+    "widget_grid": "Use CSS Grid (dense mode) for the central dashboard. e.g., grid-cols-1 md:grid-cols-2 lg:grid-cols-3 with gap-4. No empty spaces.",
+    "opord_section": "Independent tactical panels for each of the 5 paragraphs (Situation, Mission, Execution, Logistics, Command & Signal). Include timestamps (JetBrains Mono) and classification tags."
+  },
+  "icons_and_assets": {
+    "library": "lucide-react",
+    "usage": "Use sharp, strictly unstyled stroke icons. Map icons to military concepts (e.g., Crosshair for Objectives, Shield for Friendly Forces, Skull/Flame for Enemy, Radio for Comms, Plane/Helicopter for Support, Map for Satellite).",
+    "nato_app6": "If possible, simulate NATO tactical symbols by composing small geometric shapes (rectangles for friendly, diamonds for hostile) next to labels."
+  },
+  "media": {
+    "image_prompts_for_gemini_nano": {
+      "hero_banner": "Realistic military photography style, Marine Raiders in Afghanistan night ops, heavy green NVG tint, rugged mountains in background, tactical overlay UI, high contrast, cinematic, gritty.",
+      "a10_cas": "Realistic military photography, A-10 Thunderbolt II flying low over desert terrain, close air support, dust kicking up, tactical gun camera overlay.",
+      "uh60_insertion": "Realistic night vision style photography, UH-60 Blackhawk helicopter landing in a desert at night, soldiers fast-roping, heavy green tint, thermal imaging aesthetic.",
+      "satellite_recon": "Realistic military satellite imagery of a rural village and anti-aircraft site in mountainous terrain, black and white electro-optical sensor style with neon green MGRS grid and target boxes overlay.",
+      "jtac_laser": "Realistic military photography, JTAC operator laying on ridge looking through laser designator binoculars, IR strobe flashing, night operation, green phosphor NVG effect."
+    },
+    "fallback_unsplash_urls": {
+      "military_helicopter_night": "https://images.unsplash.com/photo-1696272838777-dc15ac2446a6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwxfHxtaWxpdGFyeSUyMGhlbGljb3B0ZXIlMjBuaWdodHxlbnwwfHx8fDE3ODQxMjA0OTN8MA&ixlib=rb-4.1.0&q=85",
+      "satellite_view": "https://images.unsplash.com/photo-1476385822777-70eabacbd41f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzl8MHwxfHNlYXJjaHwzfHxzYXRlbGxpdGUlMjBtYXAlMjB2aWV3fGVufDB8fHx8MTc4NDEyMDQ5M3ww&ixlib=rb-4.1.0&q=85",
+      "night_vision_soldiers": "https://images.unsplash.com/photo-1637594439811-f2564dd35b13?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwzfHxtaWxpdGFyeSUyMHNvbGRpZXIlMjBuaWdodCUyMHZpc2lvbnxlbnwwfHx8fDE3ODQxMjA0OTN8MA&ixlib=rb-4.1.0&q=85",
+      "tactical_screen": "https://images.unsplash.com/photo-1604677209370-9c168b004253?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHx0YWN0aWNhbCUyMG1hcCUyMHNjcmVlbnxlbnwwfHx8fDE3ODQxMjA0OTN8MA&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You MUST NOT use 'inter' font for headings. Use Rajdhani as instructed.",
+    "Do NOT use bright purple, pink, or neon gradients. Strictly use the provided muted military green/grey/black palette.",
+    "Do NOT round corners aggressively. Stick to exactly 6px (rounded-md).",
+    "Avoid any empty, blank space. The UI should look like a highly dense, complex military terminal (like SIPRNet/MarineNet).",
+    "All interactive elements MUST have a `data-testid` attribute (e.g. `data-testid=\"nav-dashboard-link\"`).",
+    "Implement the CRT scanline effect via a fixed full-screen div with pointer-events-none.",
+    "Do NOT make the header or panels fully transparent if they overlap content. Use solid dark backgrounds (#111814) or strong blur with minimal transparency.",
+    "Left fixed navigation must have ~20 items as specified in the problem statement.",
+    "The 5-paragraph OPORD (Situation, Mission, Execution, Admin/Logistics, Command & Signal) must be implemented with distinct tactical panel headers.",
+    "Use JetBrains Mono for all timestamps, coordinates (MGRS format like '42S WC 1234 5678'), and quantitative data.",
+    "Do NOT include standard 'SaaS' or 'Marketing' patterns like large centered hero texts with drop shadows. The hero should look like a tactical mission briefing banner (Operation Heaven, Task Force Northern Falcon)."
+  ]
+}
