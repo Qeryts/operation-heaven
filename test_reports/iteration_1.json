@@ -1,0 +1,27 @@
+{
+  "summary": "Phase 1 smoke test of Operation Heaven / Task Force Northern Falcon portal. All 5 backend endpoints return correct shape (mission meta, 16 dashboard widgets, 10 OPORD paragraphs with 7 OB codes, 5 assets, image endpoint 422 on empty body). Frontend Hero, Dashboard, and OPORD screens render fully with all required data-testids, Polish OPORD content preserved, right sidebar clock + assets present, 20 nav items rendered.",
+  "tested_scope": ["frontend", "backend", "integration"],
+  "passed": [
+    "GET /api/mission returns OPERATION HEAVEN / TASK FORCE NORTHERN FALCON / MAHBOOT / SECRET//NOFORN with weather object",
+    "GET /api/mission/dashboard returns 16 widgets with id/title/value/state/detail",
+    "GET /api/mission/opord returns 10 paragraphs: situation, enemy, friendly (roster), mission, execution, objectives (7 OB codes OB-A1..OB-B4), logistics, command (comms/codewords/iff), mettc, appendix",
+    "GET /api/mission/sidebar returns mission_clock, phase, defcon, roe, 5 assets_on_station, coordinates",
+    "POST /api/images/generate returns 422 on empty body (endpoint exists, not invoked)",
+    "Hero page: hero-op-title = 'OPERATION HEAVEN', TASK FORCE NORTHERN FALCON present, 8 status cards (MISSION/AO/DATE/TIME/WEATHER/VISIBILITY/MOON/WIND), MILITARY SIMULATION disclaimer visible",
+    "Left nav renders exactly 20 items",
+    "hero-open-dashboard navigates to /dashboard; widget-grid renders 16 widget-* elements",
+    "/opord: opord-title = 'OPORD · OPERATION HEAVEN'; all 10 opord-<id> paragraphs render",
+    "All Polish tokens verified verbatim: SYTUACJA, WRÓG, SIŁY WŁASNE, ZADANIE, WYKONANIE, CELE, ZABEZPIECZENIE LOGISTYCZNE, DOWODZENIE, METT-TC, DODATEK",
+    "All 7 OB codes present in OPORD DOM: OB-A1, OB-A2, OB-A3, OB-B1, OB-B2, OB-B3, OB-B4",
+    "Right sidebar shows 'MISSION CLOCK · ZULU' with live clock, OPERATIONAL STATE (PHASE/DEFCON/ROE/CLASS), 5 ASSETS ON STATION (Hawk 1-1, Hawk 1-2, Yankee 1-1, Pedro 1-1, Raptor Actual), GEOSPATIAL · MGRS",
+    "No console errors during navigation"
+  ],
+  "failed": [],
+  "action_items": [
+    "Minor (non-blocking): Nav enabled/disabled classification via aria-disabled could not be automatically distinguished in test script (all 20 rendered visually with the expected disabled styling per screenshot). Confirming visually only — main agent may add explicit aria-disabled='true' to Phase 2 items for stricter automated assertion in the full pass.",
+    "Minor (non-blocking): Top-bar text 'SECRET//NOFORN' uses letter-spacing so substring match on innerText failed on Hero even though it renders visually. Not a bug; noted for future test-string matching."
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}

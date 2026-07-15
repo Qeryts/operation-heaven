@@ -1,82 +1,101 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    darkMode: ["class"],
-    content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html"
-  ],
+  darkMode: ["class"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
-      },
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        bg: "#0A0A0A",
+        panel: {
+          DEFAULT: "#111814",
+          light: "#161B18",
+        },
+        mil: {
+          border: "#2D3A31",
+          text: "#D5E8D4",
+          sub: "#AAB9AA",
+          green: "#73C76B",
+          olive: "#556B2F",
+          danger: "#C73E3E",
+          warning: "#D2AF3A",
+          info: "#5EA9FF",
+          success: "#6FCF97",
+        },
+        // shadcn compatibility (mapped to military palette)
+        background: "#0A0A0A",
+        foreground: "#D5E8D4",
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))'
+          DEFAULT: "#111814",
+          foreground: "#D5E8D4",
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))'
+          DEFAULT: "#111814",
+          foreground: "#D5E8D4",
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))'
+          DEFAULT: "#73C76B",
+          foreground: "#0A0A0A",
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))'
+          DEFAULT: "#161B18",
+          foreground: "#D5E8D4",
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))'
+          DEFAULT: "#161B18",
+          foreground: "#AAB9AA",
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))'
+          DEFAULT: "#161B18",
+          foreground: "#D5E8D4",
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))'
+          DEFAULT: "#C73E3E",
+          foreground: "#D5E8D4",
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))'
-        }
+        border: "#2D3A31",
+        input: "#2D3A31",
+        ring: "#73C76B",
+      },
+      borderRadius: {
+        lg: "6px",
+        md: "6px",
+        sm: "4px",
+      },
+      fontFamily: {
+        header: ["Rajdhani", "sans-serif"],
+        body: ["'IBM Plex Sans'", "sans-serif"],
+        mono: ["'JetBrains Mono'", "monospace"],
       },
       keyframes: {
-        'accordion-down': {
-          from: {
-            height: '0'
-          },
-          to: {
-            height: 'var(--radix-accordion-content-height)'
-          }
+        "led-blink": {
+          "0%, 100%": { opacity: "0.35" },
+          "50%": { opacity: "1" },
         },
-        'accordion-up': {
-          from: {
-            height: 'var(--radix-accordion-content-height)'
-          },
-          to: {
-            height: '0'
-          }
-        }
+        "radar-sweep": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "grid-scroll": {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "40px 40px" },
+        },
+        "cursor-blink": {
+          "0%, 50%": { opacity: "1" },
+          "51%, 100%": { opacity: "0" },
+        },
+        "coord-slide": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-20px)" },
+        },
       },
       animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
-      }
-    }
+        "led-blink": "led-blink 1.6s ease-in-out infinite",
+        "radar-sweep": "radar-sweep 4s linear infinite",
+        "grid-scroll": "grid-scroll 8s linear infinite",
+        "cursor-blink": "cursor-blink 1s step-end infinite",
+        "coord-slide": "coord-slide 20s linear infinite",
+      },
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };
