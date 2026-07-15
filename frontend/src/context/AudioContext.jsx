@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 const AudioContext = createContext();
 
 // Tworzymy JEDNĄ, globalną instancję audio poza komponentem Reacta.
-// Gwarantuje to, że przeglądarka fizycznie nie stworzy drugiego odtwarzacza.
 const globalAudio = new Audio("/ambient.mp3");
 globalAudio.loop = true;
 
@@ -12,7 +11,24 @@ export const AudioProvider = ({ children }) => {
   const [volume, setVolume] = useState(0.5);
   const hasInitialized = useRef(false);
 
-  // Synchronizacja głośności
+  // 1. Automatyczna synchronizacja stanu UI ze stanem odtwarzacza audio
+  useEffect(() => {
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    globalAudio.addEventListener("play", handlePlay);
+    globalAudio.addEventListener("pause", handlePause);
+
+    // Na wszelki wypadek ustawiamy początkowy stan
+    setIsPlaying(!globalAudio.paused);
+
+    return () => {
+      globalAudio.removeEventListener("play", handlePlay);
+      globalAudio.removeEventListener("pause", handlePause);
+    };
+  }, []);
+
+  // 2. Synchronizacja głośności
   useEffect(() => {
     globalAudio.volume = volume;
   }, [volume]);
@@ -20,28 +36,21 @@ export const AudioProvider = ({ children }) => {
   // Funkcja bezpiecznego uruchamiania odtwarzania
   const playAudio = () => {
     globalAudio.play()
-      .then(() => {
-        setIsPlaying(true);
-      })
       .catch(err => console.log("Play blocked/failed:", err));
   };
 
+  // 3. Obsługa Autoplay oraz pierwszej interakcji
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    // 1. Próba natychmiastowego odtworzenia przy starcie (Autoplay)
+    // Próba natychmiastowego odtworzenia przy starcie (Autoplay)
     globalAudio.play()
-      .then(() => {
-        setIsPlaying(true);
-      })
       .catch(() => {
-        // 2. Jeśli przeglądarka zablokowała autoplay, czekamy na pierwsze kliknięcie na stronie
+        // Jeśli przeglądarka zablokowała autoplay, czekamy na pierwsze kliknięcie na stronie
         const handleFirstInteraction = () => {
           if (globalAudio.paused) {
             playAudio();
-          } else {
-            setIsPlaying(true);
           }
           // Natychmiast usuwamy nasłuchiwacze, aby nie odpalić funkcji drugi raz
           window.removeEventListener("click", handleFirstInteraction);
@@ -51,11 +60,6 @@ export const AudioProvider = ({ children }) => {
         window.addEventListener("click", handleFirstInteraction);
         window.addEventListener("touchstart", handleFirstInteraction);
       });
-
-    // Funkcja czyszcząca
-    return () => {
-      // Nie zatrzymujemy globalAudio przy unmount, bo chcemy, żeby grało przy zmianie stron!
-    };
   }, []);
 
   const togglePlay = () => {
@@ -63,7 +67,6 @@ export const AudioProvider = ({ children }) => {
       playAudio();
     } else {
       globalAudio.pause();
-      setIsPlaying(false);
     }
   };
 
