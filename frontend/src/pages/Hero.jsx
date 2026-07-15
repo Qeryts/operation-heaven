@@ -39,12 +39,6 @@ const Hero = () => {
             Witaj w <span className="text-mil-green">OPERATION HEAVEN</span>
           </h2>
           <p className="text-[14px] leading-relaxed text-mil-sub">
-            <span className="text-mil-text font-semibold">Task Force Northern Falcon</span> to elitarna grupa bojowa złożona z elementów
-            <span className="text-mil-text"> USMC · MARSOC</span>, operująca w prowincji Mahboot w północnym Afganistanie. Zabezpieczyliśmy
-            przyczółek wokół <span className="text-mil-text">FOB &laquo;Glitter&raquo;</span>, jednak strefa działań pozostaje pod kontrolą
-            sił Talibów wykorzystujących ufortyfikowane stanowiska przeciwlotnicze oraz zestawy MANPADS.
-          </p>
-          <p className="text-[14px] leading-relaxed text-mil-sub">
             Rozkaz operacyjny <span className="text-mil-yellow">OPORD · OPERATION HEAVEN</span> zawiera pełen plan przerzutu, zajęcia
             celów OB-A1 do OB-A3 oraz neutralizacji stanowisk OB-B1 do OB-B4.
           </p>

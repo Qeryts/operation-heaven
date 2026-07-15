@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { Satellite, Package, Clock, Radio, Compass, ArrowRight } from "lucide-react";
+import { Clock, Radio, Compass } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -10,25 +9,6 @@ const formatZulu = (d) => {
   const mm = String(d.getUTCMinutes()).padStart(2, "0");
   const ss = String(d.getUTCSeconds()).padStart(2, "0");
   return `${hh}:${mm}:${ss}Z`;
-};
-
-const Card = ({ eyebrow, title, children, to, testId }) => {
-  const Wrap = to ? Link : "div";
-  return (
-    <Wrap
-      {...(to ? { to, "data-testid": testId } : { "data-testid": testId })}
-      className="mil-card p-6 block hover:border-[#3a3a3a] transition-colors"
-    >
-      {eyebrow && <div className="section-eyebrow">{eyebrow}</div>}
-      {title && <div className="mil-heading text-white text-xl mt-2">{title}</div>}
-      <div className="mt-4 text-[13px] text-mil-sub leading-relaxed">{children}</div>
-      {to && (
-        <div className="mt-5 flex items-center gap-2 mono text-[10px] text-mil-green tracking-[0.24em] uppercase">
-          Otwórz <ArrowRight size={12} />
-        </div>
-      )}
-    </Wrap>
-  );
 };
 
 const Dodatki = () => {
@@ -60,30 +40,7 @@ const Dodatki = () => {
         </div>
       </div>
 
-      {/* Section 1: sub-pages */}
-      <section className="mb-14">
-        <div className="section-eyebrow mb-4">Sekcje</div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card
-            eyebrow={<span className="flex items-center gap-2"><Satellite size={12} /> Rozpoznanie satelitarne</span>}
-            title="Zdjęcia satelitarne"
-            to="/dodatki/satelita"
-            testId="dodatki-tile-satelita"
-          >
-            Produkty rozpoznania orbitalnego — przegląd AO Mahboot, LZ Ice / Drake / Juliet, LP/OP Fox, MSR Quack oraz cele OB-A1..OB-B1.
-            Każdy kadr zawiera siatkę MGRS, znacznik czasu i typ sensora.
-          </Card>
-          <Card
-            eyebrow={<span className="flex items-center gap-2"><Package size={12} /> Wyposażenie indywidualne</span>}
-            title="Ekwipunek load-out"
-            to="/dodatki/ekwipunek"
-            testId="dodatki-tile-ekwipunek"
-          >
-            Uzbrojenie, optyka, łączność, ochrona i medycyna — pełen load-out operatora MARSOC (M27, M4A1 Block II, M320, M240B,
-            AN/PRC-152A, AN/PVS-31A, Ops-Core, AVS, IFAK i inne).
-          </Card>
-        </div>
-      </section>
+      {/* Section 1: sub-pages removed per user request */}
 
       {/* Section 2: live widgets */}
       <section className="mb-14">
