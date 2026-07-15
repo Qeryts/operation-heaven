@@ -1,186 +1,166 @@
 import React from "react";
-import TacticalPanel from "@/components/military/TacticalPanel";
 import { ShieldCheck, Users2, TrendingUp, Ban, Target, Plane, AlertOctagon } from "lucide-react";
 
 const cards = [
   {
     id: "pid",
     icon: ShieldCheck,
-    title: "POSITIVE IDENTIFICATION (PID)",
-    state: "success",
+    title: "Positive Identification (PID)",
+    accent: "text-mil-green",
     body:
-      "All engagements require positive identification of a hostile force before the application of lethal force. PID may be established through observed hostile act, hostile intent, or verified declaration by higher authority.",
+      "Każde zaangażowanie wymaga pozytywnej identyfikacji siły wrogiej przed użyciem środków bojowych. PID może zostać ustalone poprzez zaobserwowany akt lub intencję wrogą, lub potwierdzenie przez wyższe dowództwo.",
     bullets: [
-      "Observed hostile act or hostile intent required",
-      "Weapon in hand and directed toward friendly forces",
-      "Coordinated maneuver consistent with attack",
+      "Wymagany zaobserwowany akt lub intencja wroga",
+      "Broń w ręku i skierowana w stronę sił własnych",
+      "Skoordynowany manewr wskazujący na atak",
     ],
   },
   {
     id: "civilians",
     icon: Users2,
-    title: "CIVILIAN PRESENCE",
-    state: "warning",
+    title: "Obecność cywilów",
+    accent: "text-mil-yellow",
     body:
-      "Assume civilian presence in villages, markets and MSRs until confirmed otherwise. Distinguish combatants from non-combatants at all times. When in doubt, hold fire and request verification through Godfather.",
+      "Zakładaj obecność cywilów w wioskach, na targowiskach i wzdłuż MSR do czasu potwierdzenia inaczej. Rozróżniaj kombatantów od niekombatantów w każdej sytuacji. W razie wątpliwości — wstrzymaj ogień i zażądaj weryfikacji przez Godfather.",
     bullets: [
-      "Assume presence in built-up areas (OB-A2, OB-A3)",
-      "Withhold fire in vicinity of women, children, elderly",
-      "Report suspected non-combatants on SR 50 MHz",
+      "Zakładaj obecność w rejonach zabudowanych (OB-A2, OB-A3)",
+      "Wstrzymaj ogień w pobliżu kobiet, dzieci i osób starszych",
+      "Raportuj podejrzanych niekombatantów na SR 50 MHz",
     ],
   },
   {
     id: "eof",
     icon: TrendingUp,
-    title: "ESCALATION OF FORCE",
-    state: "info",
+    title: "Eskalacja użycia siły",
+    accent: "text-mil-text",
     body:
-      "Employ graduated response before lethal force whenever tactical situation permits. The 5 S's: Shout, Show, Shove, Shoot warning, Shoot to kill.",
+      "Stosuj stopniowaną odpowiedź przed użyciem środków śmiercionośnych, jeśli sytuacja taktyczna na to pozwala. Zasada 5 S: Shout, Show, Shove, Shoot warning, Shoot to kill.",
     bullets: [
-      "1. SHOUT — verbal warning in local language / English",
-      "2. SHOW — display weapon, hand signals, IR strobe",
-      "3. SHOVE — physical control if within contact range",
-      "4. SHOOT warning — controlled disabling fire",
-      "5. SHOOT to eliminate threat — only if PID satisfied",
+      "1. SHOUT — ostrzeżenie werbalne w j. lokalnym / angielskim",
+      "2. SHOW — pokazanie broni, sygnały ręczne, stroboskop IR",
+      "3. SHOVE — kontakt fizyczny w zasięgu bezpośrednim",
+      "4. SHOOT warning — kontrolowany ogień unieszkodliwiający",
+      "5. SHOOT to eliminate — tylko przy spełnionym PID",
     ],
   },
   {
     id: "friendly-fire",
     icon: Ban,
-    title: "FRIENDLY FIRE / FRATRICIDE",
-    state: "danger",
+    title: "Bratobójczy ogień / Fratricide",
+    accent: "text-mil-red",
     body:
-      "IFF markings are mandatory for all elements. Report grid before engagement of any target within 500 m of adjacent callsigns. Deconflict fires through JTAC (Raptor Actual) prior to CAS employment.",
+      "Znaczniki IFF są obowiązkowe dla wszystkich elementów. Raportuj namiary przed engagement dowolnego celu w promieniu 500 m od sąsiednich kryptonimów. Deconflict wszystkich fires przez JTAC (Raptor Actual) przed użyciem CAS.",
     bullets: [
-      "IR strobe · Blue chemlight · None (see IFF card)",
-      "Deconflict all fires within 500 m through JTAC",
-      "Blue-force BFT check required before CAS run",
+      "Stroboskop IR · Świetlik niebieski · Brak (patrz IFF card)",
+      "Deconflict wszystkich fires w promieniu 500 m przez JTAC",
+      "Sprawdzenie BFT przed każdym runem CAS",
     ],
   },
   {
     id: "capture-hvt",
     icon: Target,
-    title: "CAPTURE OF HVT (JACKPOT ×3)",
-    state: "warning",
+    title: "Kill or Capture HVT (JACKPOT ×3)",
+    accent: "text-mil-yellow",
     body:
-      "Maliqq Abdul Bukaqe — Kill or Capture. Preference is CAPTURE for intelligence exploitation, however lethal force is authorized if the HVT poses direct threat or attempts to flee AO. Announce JACKPOT ×3 on LR 70 MHz upon secure.",
+      "Maliqq Abdul Bukaqe — Kill or Capture. Preferowane jest ZATRZYMANIE do eksploatacji wywiadowczej, jednak środki śmiercionośne są autoryzowane jeśli HVT stanowi bezpośrednie zagrożenie lub próbuje uciec z AO. Ogłoś JACKPOT ×3 na LR 70 MHz po zabezpieczeniu.",
     bullets: [
-      "Preference: CAPTURE for tactical questioning",
-      "Lethal force authorized if PID + direct threat",
-      "Announce JACKPOT ×3 on LR 70 MHz on secure",
-      "Transfer custody to Godfather at FOB GLITTER",
+      "Preferencja: ZATRZYMANIE do tactical questioning",
+      "Środki śmiercionośne autoryzowane przy PID + bezpośrednim zagrożeniu",
+      "Ogłoś JACKPOT ×3 na LR 70 MHz po zabezpieczeniu",
+      "Przekazanie pieczy do Godfather w FOB GLITTER",
     ],
   },
   {
     id: "cas-approval",
     icon: Plane,
-    title: "CAS APPROVAL AUTHORITY",
-    state: "info",
+    title: "Zatwierdzanie CAS",
+    accent: "text-mil-text",
     body:
-      "All CAS employment routed through Raptor Actual (JTAC). Type 1, 2, 3 controls per JP 3-09.3. Bull's 1-2-1 · channel 1-1-3. Hawk 1-1 / 1-2 (A-10C) on station. No fires within 100 m of civilian structures without CDE approval by Godfather.",
+      "Całość CAS naprowadzana przez Raptor Actual (JTAC). Kontrola typu 1, 2, 3 wg JP 3-09.3. Bull's 1-2-1 · kanał 1-1-3. Hawk 1-1 / 1-2 (A-10C) na stanowisku. Brak fires w promieniu 100 m od obiektów cywilnych bez zatwierdzenia CDE przez Godfather.",
     bullets: [
-      "JTAC: Raptor Actual — final clearance required",
-      "Frequency: SR 51.121 MHz (Bull's 1-2-1)",
-      "9-line brief mandatory before every strike",
-      "TIC condition permits Type 3 control",
+      "JTAC: Raptor Actual — wymagane finalne zezwolenie",
+      "Częstotliwość: SR 51.121 MHz (Bull's 1-2-1)",
+      "Odprawa 9-line obowiązkowa przed każdym strike'em",
+      "Warunek TIC dopuszcza kontrolę typu 3",
     ],
   },
   {
     id: "cde",
     icon: AlertOctagon,
-    title: "COLLATERAL DAMAGE ESTIMATE (CDE)",
-    state: "danger",
+    title: "Ocena szkód pobocznych (CDE)",
+    accent: "text-mil-red",
     body:
-      "Weapon selection must minimize risk to non-combatants and infrastructure. CDE Level 1-5 per CJCSI 3160.01. Level 4+ requires Godfather approval. Prefer precision-guided munitions over unguided ordnance in populated areas (OB-A2, OB-A3).",
+      "Dobór środków musi minimalizować ryzyko dla ludności cywilnej i infrastruktury. CDE Level 1-5 wg CJCSI 3160.01. Level 4+ wymaga zatwierdzenia przez Godfather. Preferuj amunicję precyzyjną nad niekierowaną w rejonach zabudowanych (OB-A2, OB-A3).",
     bullets: [
-      "CDE 1-3: cleared at JTAC level",
-      "CDE 4-5: requires Godfather (O-6+) approval",
-      "Prefer GBU-38 / GBU-54 over Mk 82 in urban",
-      "No BLU-97 munitions authorized in AO",
+      "CDE 1-3: zatwierdzane na poziomie JTAC",
+      "CDE 4-5: wymaga zatwierdzenia Godfather (O-6+)",
+      "Preferuj GBU-38 / GBU-54 nad Mk 82 w terenie miejskim",
+      "Amunicja BLU-97 niedopuszczona w AO",
     ],
   },
 ];
 
-const stateAccent = {
-  success: "text-mil-success border-mil-success/40",
-  danger: "text-mil-danger border-mil-danger/40",
-  warning: "text-mil-warning border-mil-warning/40",
-  info: "text-mil-info border-mil-info/40",
-};
-
 const ROE = () => {
   return (
-    <div className="p-4 space-y-4" data-testid="roe-page">
-      <div className="mil-panel p-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-16" data-testid="roe-page">
+      {/* Header */}
+      <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
         <div>
-          <div className="mono text-[10px] text-mil-sub tracking-[0.3em]">
-            RULES OF ENGAGEMENT · CJCSI 3121.01B · OPERATION HEAVEN
-          </div>
+          <div className="section-eyebrow">▬ Rules of Engagement · CJCSI 3121.01B</div>
           <h1
-            className="mil-heading text-mil-green"
-            style={{ fontSize: "clamp(26px, 3vw, 40px)", lineHeight: 1 }}
+            className="mil-heading text-white mt-2"
+            style={{ fontSize: "clamp(28px, 3.4vw, 44px)", lineHeight: 1.05 }}
             data-testid="roe-title"
           >
-            RULES OF ENGAGEMENT
+            ROE · Operation Heaven
           </h1>
         </div>
-        <div className="grid grid-cols-3 gap-2 mono text-[11px]">
-          <div className="border border-mil-border bg-panel-light px-2 py-1.5">
-            <div className="text-[10px] text-mil-sub">STATUS</div>
-            <div className="text-mil-warning">AMBER</div>
-          </div>
-          <div className="border border-mil-border bg-panel-light px-2 py-1.5">
-            <div className="text-[10px] text-mil-sub">EFFECTIVE</div>
-            <div className="text-mil-text">27 MAY 2022 · 2000Z</div>
-          </div>
-          <div className="border border-mil-border bg-panel-light px-2 py-1.5">
-            <div className="text-[10px] text-mil-sub">AUTHORITY</div>
-            <div className="text-mil-text">CJTF-OIR</div>
-          </div>
+        <div className="flex gap-2 flex-wrap">
+          <span className="chip chip-yellow">Status · AMBER</span>
+          <span className="chip">Ważne od · 27 MAY 2022 · 2000Z</span>
+          <span className="chip">CJTF-OIR</span>
         </div>
       </div>
 
-      <div className="mil-panel px-4 py-3 border-l-4 border-l-mil-warning">
-        <div className="mono text-[10px] text-mil-warning tracking-widest">NOTICE</div>
-        <div className="text-[13px] text-mil-text mt-0.5">
-          These ROE are a fictional simulation product. Read and acknowledge on SR 70 MHz. Deviations require
-          Godfather approval. When in doubt — HOLD FIRE and request clarification.
-        </div>
+      {/* Notice */}
+      <div className="mil-card p-5 border-l-2 border-l-mil-yellow mb-10">
+        <div className="mono text-[10px] text-mil-yellow tracking-widest uppercase">Uwaga</div>
+        <p className="text-[13px] text-mil-text mt-1 leading-relaxed">
+          Poniższe zasady walki są produktem fikcyjnej symulacji. Potwierdź odczyt na SR 70 MHz. Odstępstwa wymagają zatwierdzenia
+          przez Godfather. W razie wątpliwości — <span className="text-mil-yellow">WSTRZYMAJ OGIEŃ</span> i zażądaj wyjaśnienia.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {cards.map((c) => {
           const Icon = c.icon;
           return (
-            <TacticalPanel
-              key={c.id}
-              title={
-                <span className="flex items-center gap-2">
-                  <Icon size={13} />
-                  <span>{c.title}</span>
-                </span>
-              }
-              tag="S//NF"
-              state={c.state}
-              testId={`roe-${c.id}`}
-            >
-              <p className="text-[13px] leading-relaxed text-mil-text">{c.body}</p>
-              <ul className={`mt-3 border-l-2 pl-3 space-y-1 ${stateAccent[c.state]}`}>
+            <section key={c.id} className="mil-card p-6 md:p-7" data-testid={`roe-${c.id}`}>
+              <header className="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-[#1f1f1f]">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon size={16} className={c.accent} />
+                  <h2 className="mil-heading text-white text-base md:text-lg">{c.title}</h2>
+                </div>
+                <span className="chip">S//NF</span>
+              </header>
+              <p className="text-[13.5px] leading-relaxed text-mil-text/90">{c.body}</p>
+              <ul className="mt-4 border-l-2 border-[#2a2a2a] pl-3 space-y-1.5">
                 {c.bullets.map((b, i) => (
-                  <li key={i} className="text-[12px] text-mil-sub">
-                    <span className="mono text-mil-text">▸ </span>
+                  <li key={i} className="text-[12.5px] text-mil-sub leading-snug">
+                    <span className={`${c.accent}`}>▸ </span>
                     {b}
                   </li>
                 ))}
               </ul>
-            </TacticalPanel>
+            </section>
           );
         })}
       </div>
 
-      <div className="mil-panel p-3 flex items-center justify-between mono text-[10px] text-mil-sub">
-        <span>ACKNOWLEDGE ON SR 70 MHz — GODFATHER</span>
-        <span className="text-mil-warning">END OF ROE</span>
+      <div className="mt-10 pt-4 border-t border-[#1f1f1f] flex items-center justify-between mono text-[10px] text-mil-sub tracking-widest uppercase">
+        <span>Potwierdź odczyt na SR 70 MHz — Godfather</span>
+        <span className="text-mil-yellow">Koniec ROE</span>
       </div>
     </div>
   );

@@ -1,55 +1,40 @@
 import React from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
-import ClassificationBar from "@/components/military/ClassificationBar";
-import ScanlineOverlay from "@/components/military/ScanlineOverlay";
-import LeftNav from "@/components/military/LeftNav";
-import RightSidebar from "@/components/military/RightSidebar";
-import StatusLED from "@/components/military/StatusLED";
+import { Outlet } from "react-router-dom";
+import TopNav from "@/components/military/TopNav";
 
 const CommandLayout = () => {
-  const loc = useLocation();
   return (
-    <div className="h-screen w-screen flex flex-col bg-bg text-mil-text overflow-hidden" data-testid="command-layout">
-      <ScanlineOverlay />
-      <ClassificationBar position="top" text="SECRET // NOFORN // TF NORTHERN FALCON — OPERATION HEAVEN" testId="class-top" />
+    <div className="min-h-screen bg-[#0a0a0a] text-mil-text flex flex-col relative" data-testid="command-layout">
+      <div className="page-top-glow" />
+      <div className="page-top-fade" />
+      <TopNav />
 
-      {/* Sub-header — system bar */}
-      <div className="flex items-center justify-between px-4 h-9 border-b border-mil-border bg-panel-light" data-testid="sub-header">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="mil-heading text-mil-green text-sm tracking-[0.28em]" data-testid="brand-link">
-            USMC · MARSOC C2
-          </Link>
-          <span className="mono text-[10px] text-mil-sub">TERMINAL 07 · CPT. HALSTEAD, R.</span>
+      <main className="flex-1 relative z-10" data-testid="main-workspace">
+        <Outlet />
+      </main>
+
+      <footer className="border-t border-[#1f1f1f] mt-24" data-testid="footer">
+        <div className="max-w-[1400px] mx-auto px-6 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div className="mil-heading text-mil-text text-sm">Task Force Northern Falcon</div>
+            <div className="mono text-[10px] text-mil-sub mt-1 tracking-widest">
+              U.S. MARINE CORPS · MARSOC · OPERATION HEAVEN
+            </div>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="chip chip-red">SECRET</span>
+            <span className="chip">NOFORN</span>
+            <span className="chip chip-yellow">DEFCON II</span>
+            <span className="chip">v2.4.7</span>
+          </div>
         </div>
-        <div className="flex items-center gap-4 text-[10px] mono text-mil-sub">
-          <span className="flex items-center gap-1.5">
-            <StatusLED state="success" /> SIPR
-          </span>
-          <span className="flex items-center gap-1.5">
-            <StatusLED state="success" /> BFT
-          </span>
-          <span className="flex items-center gap-1.5">
-            <StatusLED state="warning" /> JSTARS
-          </span>
-          <span>PATH · {loc.pathname}</span>
+        <div className="border-t border-[#1f1f1f] py-3">
+          <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between mono text-[10px] text-mil-dim tracking-widest uppercase">
+            <span>Wyłącznie do celów symulacji wojskowej · scenariusz fikcyjny</span>
+            <span>Nie jest to oficjalny system DoD</span>
+          </div>
         </div>
-      </div>
-
-      {/* Main body */}
-      <div className="flex flex-1 min-h-0">
-        <LeftNav />
-        <main className="flex-1 min-w-0 overflow-y-auto bg-bg tactical-grid" data-testid="main-workspace">
-          <Outlet />
-        </main>
-        <RightSidebar />
-      </div>
-
-      {/* Footer classification */}
-      <ClassificationBar
-        position="bottom"
-        text="FOR MILITARY SIMULATION PURPOSES ONLY — FICTIONAL SCENARIO — NOT AN OFFICIAL DOD SYSTEM"
-        testId="class-bottom"
-      />
+      </footer>
     </div>
   );
 };
