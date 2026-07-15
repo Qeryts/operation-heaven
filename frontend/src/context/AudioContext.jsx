@@ -2,71 +2,81 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 
 const AudioContext = createContext();
 
-// Tworzymy JEDNĄ, globalną instancję audio poza komponentem Reacta.
-const globalAudio = new Audio("/ambient.mp3");
-globalAudio.loop = true;
+// BEZPIECZNY SINGLETON NA OBIEKCIE WINDOW:
+// To gwarantuje, że bez względu na to, ile razy React przeładuje ten plik,
+// w całej przeglądarce będzie istniał dokładnie JEDEN i ten sam obiekt audio.
+if (!window.__globalAudioInstance) {
+  window.__globalAudioInstance = new Audio("/ambient.mp3");
+  window.__globalAudioInstance.loop = true;
+}
+const audio = window.__globalAudioInstance;
 
 export const AudioProvider = ({ children }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [isPlaying, setIsPlaying] = useState(!audio.paused);
+  const [volume, setVolume] = useState(audio.volume || 0.5);
   const hasInitialized = useRef(false);
 
-  // 1. Automatyczna synchronizacja stanu UI ze stanem odtwarzacza audio
+  // 1. Reagowanie na fizyczny stan odtwarzacza (Zawsze zgodne UI)
   useEffect(() => {
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
 
-    globalAudio.addEventListener("play", handlePlay);
-    globalAudio.addEventListener("pause", handlePause);
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
 
-    // Na wszelki wypadek ustawiamy początkowy stan
-    setIsPlaying(!globalAudio.paused);
+    // Synchronizujemy stan na starcie
+    setIsPlaying(!audio.paused);
+    setVolume(audio.volume);
 
     return () => {
-      globalAudio.removeEventListener("play", handlePlay);
-      globalAudio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
     };
   }, []);
 
-  // 2. Synchronizacja głośności
+  // 2. Obsługa głośności
   useEffect(() => {
-    globalAudio.volume = volume;
+    audio.volume = volume;
   }, [volume]);
 
-  // Funkcja bezpiecznego uruchamiania odtwarzania
-  const playAudio = () => {
-    globalAudio.play()
-      .catch(err => console.log("Play blocked/failed:", err));
-  };
-
-  // 3. Obsługa Autoplay oraz pierwszej interakcji
+  // 3. Obsługa Autoplay oraz kliknięcia aktywującego
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    // Próba natychmiastowego odtworzenia przy starcie (Autoplay)
-    globalAudio.play()
-      .catch(() => {
-        // Jeśli przeglądarka zablokowała autoplay, czekamy na pierwsze kliknięcie na stronie
-        const handleFirstInteraction = () => {
-          if (globalAudio.paused) {
-            playAudio();
-          }
-          // Natychmiast usuwamy nasłuchiwacze, aby nie odpalić funkcji drugi raz
-          window.removeEventListener("click", handleFirstInteraction);
-          window.removeEventListener("touchstart", handleFirstInteraction);
-        };
+    const startAudio = () => {
+      audio.play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.log("Autoplay zablokowany, czekam na ruch użytkownika...", err));
+    };
 
-        window.addEventListener("click", handleFirstInteraction);
-        window.addEventListener("touchstart", handleFirstInteraction);
-      });
+    // Próba natychmiastowego startu
+    startAudio();
+
+    // Rezerwowy nasłuchiwacz na dowolne kliknięcie (jeśli przeglądarka zablokowała autoplay)
+    const handleFirstInteraction = () => {
+      if (audio.paused) {
+        startAudio();
+      }
+      // Usuwamy nasłuchiwacze natychmiast po pierwszej interakcji
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+
+    window.addEventListener("click", handleFirstInteraction);
+    window.addEventListener("touchstart", handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
   }, []);
 
   const togglePlay = () => {
-    if (globalAudio.paused) {
-      playAudio();
+    if (audio.paused) {
+      audio.play().catch(err => console.log("Błąd odtwarzania:", err));
     } else {
-      globalAudio.pause();
+      audio.pause();
     }
   };
 
