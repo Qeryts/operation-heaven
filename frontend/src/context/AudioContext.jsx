@@ -1,158 +1,73 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useState, useRef, useEffect } from "react";
 
-const AudioCtx = createContext(null);
+const AudioContext = createContext();
 
-// Johnny Cash — "God's Gonna Cut You Down" (official audio on YouTube)
-const DEFAULT_VIDEO_ID = "Y1ZsVe7VHwc";
-const TRACK_LABEL = "Johnny Cash · God's Gonna Cut You Down";
+export const AudioProvider = ({ children }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.5);
+  const audioRef = useRef(null);
 
-export const AudioProvider = ({ children, videoId = DEFAULT_VIDEO_ID }) => {
-  const playerRef = useRef(null);
-  const [ready, setReady] = useState(false);
-  const [playing, setPlaying] = useState(true);
-  const [muted, setMuted] = useState(true);
-  const [volume, setVolumeState] = useState(45);
-  const unmutedRef = useRef(false);
-
+  // Próba autoplay po załadowaniu strony
   useEffect(() => {
-    let mounted = true;
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      
+      // Próba natychmiastowego odtworzenia
+      const playPromise = audioRef.current.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            // Autoplay zablokowany przez przeglądarkę - czekamy na pierwszą interakcję użytkownika
+            const handleFirstInteraction = () => {
+              if (audioRef.current && !isPlaying) {
+                audioRef.current.play()
+                  .then(() => {
+                    setIsPlaying(true);
+                    // Usuwamy nasłuchiwacze, gdy już raz ruszyło
+                    window.removeEventListener("click", handleFirstInteraction);
+                    window.removeEventListener("touchstart", handleFirstInteraction);
+                  })
+                  .catch(err => console.log("Play failed on interaction:", err));
+              }
+            };
 
-    // Ensure a mount point exists (hidden)
-    let mountDiv = document.getElementById("yt-audio-player-mount");
-    if (!mountDiv) {
-      mountDiv = document.createElement("div");
-      mountDiv.id = "yt-audio-player-mount";
-      mountDiv.style.cssText =
-        "position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;pointer-events:none;opacity:0;";
-      document.body.appendChild(mountDiv);
-    }
-
-    const initPlayer = () => {
-      if (!mounted || !window.YT || !window.YT.Player) return;
-      playerRef.current = new window.YT.Player("yt-audio-player-mount", {
-        videoId,
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          loop: 1,
-          playlist: videoId, // required for loop to work with single video
-          controls: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          rel: 0,
-          fs: 0,
-          iv_load_policy: 3,
-          disablekb: 1,
-        },
-        events: {
-          onReady: (e) => {
-            try {
-              e.target.setVolume(volume);
-              e.target.playVideo();
-              setReady(true);
-            } catch {}
-          },
-          onStateChange: (e) => {
-            const S = window.YT.PlayerState;
-            if (e.data === S.PLAYING) setPlaying(true);
-            else if (e.data === S.PAUSED) setPlaying(false);
-            else if (e.data === S.ENDED) {
-              try { e.target.playVideo(); } catch {}
-            }
-          },
-        },
-      });
-    };
-
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-    } else {
-      // Load API script only once
-      if (!document.getElementById("yt-iframe-api-script")) {
-        const s = document.createElement("script");
-        s.id = "yt-iframe-api-script";
-        s.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(s);
+            window.addEventListener("click", handleFirstInteraction);
+            window.addEventListener("touchstart", handleFirstInteraction);
+          });
       }
-      const prev = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (typeof prev === "function") prev();
-        initPlayer();
-      };
     }
-
-    // Auto-unmute on first user interaction (browser autoplay policy)
-    const unmuteOnce = () => {
-      if (unmutedRef.current) return;
-      unmutedRef.current = true;
-      try {
-        playerRef.current?.unMute?.();
-        playerRef.current?.setVolume?.(volume);
-        playerRef.current?.playVideo?.();
-        setMuted(false);
-      } catch {}
-      window.removeEventListener("pointerdown", unmuteOnce);
-      window.removeEventListener("keydown", unmuteOnce);
-    };
-    window.addEventListener("pointerdown", unmuteOnce);
-    window.addEventListener("keydown", unmuteOnce);
-
-    return () => {
-      mounted = false;
-      window.removeEventListener("pointerdown", unmuteOnce);
-      window.removeEventListener("keydown", unmuteOnce);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoId]);
+  }, []);
 
-  const toggle = () => {
-    if (!playerRef.current) return;
-    try {
-      if (playing) {
-        playerRef.current.pauseVideo();
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
       } else {
-        playerRef.current.unMute?.();
-        setMuted(false);
-        playerRef.current.playVideo();
+        audioRef.current.play().catch(err => console.log("Play blocked:", err));
       }
-    } catch {}
+      setIsPlaying(!isPlaying);
+    }
   };
 
-  const setVolume = (v) => {
-    const val = Math.max(0, Math.min(100, Math.round(v)));
-    setVolumeState(val);
-    try {
-      if (val === 0) {
-        playerRef.current?.mute?.();
-        setMuted(true);
-      } else {
-        playerRef.current?.unMute?.();
-        setMuted(false);
-        playerRef.current?.setVolume?.(val);
-      }
-    } catch {}
-  };
-
-  const toggleMute = () => {
-    try {
-      if (muted) {
-        playerRef.current?.unMute?.();
-        setMuted(false);
-        if (volume === 0) setVolume(30);
-      } else {
-        playerRef.current?.mute?.();
-        setMuted(true);
-      }
-    } catch {}
+  const changeVolume = (newVolume) => {
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
   };
 
   return (
-    <AudioCtx.Provider
-      value={{ ready, playing, muted, volume, toggle, setVolume, toggleMute, trackLabel: TRACK_LABEL }}
-    >
+    <AudioContext.Provider value={{ isPlaying, volume, togglePlay, changeVolume }}>
       {children}
-    </AudioCtx.Provider>
+      {/* Globalny element audio, który nigdy nie unmontuje się przy zmianie podstron */}
+      <audio ref={audioRef} src="/ambient.mp3" loop />
+    </AudioContext.Provider>
   );
 };
 
-export const useAudio = () => useContext(AudioCtx);
+export const useAudio = () => useContext(AudioContext);
